@@ -1,5 +1,8 @@
 ipcap:
 	cc main.c ipv4.c -o ipcap
 
+run: clean ipcap
+	./ipcap
+
 clean:
-	rm ipcap
+	rm -f ipcap

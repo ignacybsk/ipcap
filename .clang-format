@@ -5,4 +5,4 @@ ColumnLimit: 200
 PointerAlignment: Left
 BreakBeforeBraces: Attach
 Cpp11BracedListStyle: false
-AllowShortBlocksOnASingleLine: Always
+AllowShortFunctionsOnASingleLine: None

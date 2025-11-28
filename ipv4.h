@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #define IPV4_PACKET_BUFFER_LENGTH 19
+#define IPV4_HEADER_SIZE 20
 
 #define IPV4_VERSION_IDX 0
 #define IPV4_VERSION_SHIFT 4
@@ -45,22 +46,23 @@
 #define IPV4_ADDRESS_STRING_LENGTH 15
 
 struct ipv4_headers {
-    uint8_t version;
-    uint8_t ihl;
-    uint8_t dscp;
-    uint8_t ecn;
-    uint16_t total_length;
-    uint16_t identification;
-    uint8_t flags;
-    uint16_t fragment_offset;
-    uint8_t time_to_live;
-    uint8_t protocol;
-    uint16_t header_checksum;
-    uint32_t source_address;
-    uint32_t destination_address;
+    const uint8_t version;
+    const uint8_t ihl;
+    const uint8_t dscp;
+    const uint8_t ecn;
+    const uint16_t total_length;
+    const uint16_t identification;
+    const uint8_t flags;
+    const uint16_t fragment_offset;
+    const uint8_t time_to_live;
+    const uint8_t protocol;
+    const uint16_t header_checksum;
+    const uint32_t source_address;
+    const uint32_t destination_address;
 };
 
 struct ipv4_headers ipv4_headers_from(const uint8_t buf[]);
 uint32_t ipv4_address_from(const uint8_t buf[], int offset, int length);
+int ipv4_data_size_from(struct ipv4_headers* headers);
 void ipv4_address_to_string(uint32_t address, char string[]);
 void ipv4_headers_println_out(struct ipv4_headers* packet);

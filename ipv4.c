@@ -1,5 +1,6 @@
 #include "ipv4.h"
 
+#include <netdb.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -35,6 +36,10 @@ uint32_t ipv4_address_from(const uint8_t buf[], int offset, int length) {
     return address;
 }
 
+int ipv4_data_size_from(struct ipv4_headers* headers) {
+    return headers->total_length - IPV4_HEADER_SIZE;
+}
+
 void ipv4_address_to_string(uint32_t address, char string[]) {
     uint8_t byte1 = address >> 24;
     uint8_t byte2 = address >> 16;
@@ -44,4 +49,18 @@ void ipv4_address_to_string(uint32_t address, char string[]) {
     sprintf(string, "%d.%d.%d.%d", byte1, byte2, byte3, byte4);
 }
 
-void ipv4_headers_println_out(struct ipv4_headers* headers) {}
+void ipv4_headers_println_out(struct ipv4_headers* headers) {
+    const char* protocol_name = getprotobynumber(headers->protocol)->p_name;
+
+    char src_addr_str[IPV4_ADDRESS_STRING_LENGTH];
+    ipv4_address_to_string(headers->source_address, src_addr_str);
+
+    char dst_addr_str[IPV4_ADDRESS_STRING_LENGTH];
+    ipv4_address_to_string(headers->destination_address, dst_addr_str);
+
+    int data_size = ipv4_data_size_from(headers);
+
+    const char* format = "%s %s -> %s  size=%d  ttl=%u  id=%u\n";
+
+    printf(format, protocol_name, src_addr_str, dst_addr_str, data_size, headers->time_to_live, headers->identification);
+}
