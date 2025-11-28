@@ -50,8 +50,6 @@ void ipv4_address_to_string(uint32_t address, char string[]) {
 }
 
 void ipv4_headers_println_out(struct ipv4_headers* headers) {
-    const char* protocol_name = getprotobynumber(headers->protocol)->p_name;
-
     char src_addr_str[IPV4_ADDRESS_STRING_LENGTH];
     ipv4_address_to_string(headers->source_address, src_addr_str);
 
@@ -59,6 +57,15 @@ void ipv4_headers_println_out(struct ipv4_headers* headers) {
     ipv4_address_to_string(headers->destination_address, dst_addr_str);
 
     int data_size = ipv4_data_size_from(headers);
+
+    struct protoent* p_ent = getprotobynumber(headers->protocol);
+    char* protocol_name;
+
+    if (p_ent) {
+        protocol_name = p_ent->p_name;
+    } else {
+        protocol_name = "unrecognized";
+    }
 
     const char* format = "%s %s -> %s  size=%d  ttl=%u  id=%u\n";
 
