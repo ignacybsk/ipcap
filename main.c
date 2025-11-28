@@ -4,7 +4,6 @@
 #include <net/ethernet.h>
 #include <sys/socket.h>
 
-#include <string.h>
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
