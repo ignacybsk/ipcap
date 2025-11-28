@@ -62,7 +62,11 @@ struct ipv4_headers {
 };
 
 struct ipv4_headers ipv4_headers_from(const uint8_t buf[]);
+
 uint32_t ipv4_address_from(const uint8_t buf[], int offset, int length);
+
 int ipv4_data_size_from(struct ipv4_headers* headers);
+
 void ipv4_address_to_string(uint32_t address, char string[]);
+
 void ipv4_headers_println_out(struct ipv4_headers* packet);
