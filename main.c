@@ -1,15 +1,30 @@
+#include <netdb.h>
 #include <arpa/inet.h>
 #include <linux/if_packet.h>
 #include <net/ethernet.h>
 #include <sys/socket.h>
 
+#include <string.h>
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
 
 #include "ipv4.h"
 
-int main() {
+int main(int argc, const char* argv[]) {
+    int filter_protocol = -1;
+
+    if (argc > 1) {
+        struct protoent* ent = getprotobyname(argv[1]);
+
+        if (!ent) {
+            fprintf(stderr, "unrecognized protocol '%s'\n", argv[1]);
+            return 1;
+        }
+
+        filter_protocol = ent->p_proto;
+    }
+
     int sock = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_IP));
 
     if (sock == -1) {
@@ -32,6 +47,10 @@ int main() {
         }
 
         struct ipv4_headers headers = ipv4_headers_from(packet_buf);
+
+        if (filter_protocol != -1 && headers.protocol != filter_protocol) {
+            continue;
+        }
 
         ipv4_headers_println_out(&headers);
     }
