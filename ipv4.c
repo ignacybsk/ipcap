@@ -40,6 +40,10 @@ int ipv4_data_size_from(struct ipv4_headers* headers) {
     return headers->total_length - IPV4_HEADER_SIZE;
 }
 
+int ipv4_is_packet_ipv4(uint8_t packet_msb) {
+    return (packet_msb >> 4) == 4;
+}
+
 void ipv4_address_to_string(uint32_t address, char string[]) {
     uint8_t byte1 = address >> 24;
     uint8_t byte2 = address >> 16;

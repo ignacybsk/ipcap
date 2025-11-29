@@ -25,7 +25,7 @@ int main(int argc, const char* argv[]) {
         filter_protocol = ent->p_proto;
     }
 
-    int sock = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_IP));
+    int sock = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_ALL));
 
     if (sock == -1) {
         fprintf(stderr, "socket failed: %d\n", errno);
@@ -43,6 +43,10 @@ int main(int argc, const char* argv[]) {
 
         if (bytes_read < sizeof packet_buf) {
             fprintf(stderr, "packet buffer wasn't filled\n");
+            continue;
+        }
+
+        if (!ipv4_is_packet_ipv4(packet_buf[0])) {
             continue;
         }
 
