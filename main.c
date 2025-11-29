@@ -52,7 +52,7 @@ int main(int argc, const char* argv[]) {
             continue;
         }
 
-        ipv4_headers_println_out(&headers);
+        ipv4_headers_print_to(stdout, &headers);
     }
 
     close(sock);

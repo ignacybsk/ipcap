@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdio.h>
 
 #define IPV4_PACKET_BUFFER_LENGTH 19
 #define IPV4_HEADER_SIZE 20
@@ -69,4 +70,4 @@ int ipv4_data_size_from(struct ipv4_headers* headers);
 
 void ipv4_address_to_string(uint32_t address, char string[]);
 
-void ipv4_headers_println_out(struct ipv4_headers* packet);
+void ipv4_headers_print_to(FILE* fd, struct ipv4_headers* packet);

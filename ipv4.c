@@ -49,7 +49,7 @@ void ipv4_address_to_string(uint32_t address, char string[]) {
     sprintf(string, "%d.%d.%d.%d", byte1, byte2, byte3, byte4);
 }
 
-void ipv4_headers_println_out(struct ipv4_headers* headers) {
+void ipv4_headers_print_to(FILE* fd, struct ipv4_headers* headers) {
     char src_addr_str[IPV4_ADDRESS_STRING_LENGTH];
     ipv4_address_to_string(headers->source_address, src_addr_str);
 
@@ -69,5 +69,5 @@ void ipv4_headers_println_out(struct ipv4_headers* headers) {
 
     const char* format = "%s %s -> %s  size=%d  ttl=%u  id=%u\n";
 
-    printf(format, protocol_name, src_addr_str, dst_addr_str, data_size, headers->time_to_live, headers->identification);
+    fprintf(fd, format, protocol_name, src_addr_str, dst_addr_str, data_size, headers->time_to_live, headers->identification);
 }
