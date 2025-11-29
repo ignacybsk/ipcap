@@ -25,7 +25,7 @@ int main(int argc, const char* argv[]) {
         filter_protocol = ent->p_proto;
     }
 
-    unsigned int if_index = if_nametoindex("lo");
+    unsigned int if_index = if_nametoindex("eth0");
 
     if (!if_index) {
         printf("if_nametoindex failed %d\n", errno);
