@@ -43,7 +43,7 @@
 #define IPV4_DESTINATIONADDRESS_OFFSET 16
 #define IPV4_DESTINATIONADDRESS_LENGTH 4
 
-#define IPV4_ADDRESS_STRING_LENGTH 15
+#define IPV4_ADDRESS_STRING_LENGTH 16
 
 struct ipv4_headers {
     const uint8_t version;
