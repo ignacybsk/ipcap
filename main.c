@@ -3,6 +3,7 @@
 #include <linux/if_packet.h>
 #include <net/ethernet.h>
 #include <sys/socket.h>
+#include <net/if.h>
 
 #include <errno.h>
 #include <stdio.h>
@@ -24,10 +25,29 @@ int main(int argc, const char* argv[]) {
         filter_protocol = ent->p_proto;
     }
 
+    unsigned int if_index = if_nametoindex("lo");
+
+    if (!if_index) {
+        printf("if_nametoindex failed %d\n", errno);
+        return 1;
+    }
+
     int sock = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_IP));
 
     if (sock == -1) {
         fprintf(stderr, "socket failed: %d\n", errno);
+        return 1;
+    }
+
+    struct sockaddr_ll ll = {
+        .sll_family = AF_PACKET,
+        .sll_protocol = htons(ETH_P_IP),
+        .sll_ifindex = if_index,
+    };
+
+    if (bind(sock, (struct sockaddr*)&ll, sizeof ll) == -1) {
+        printf("bind failed %d\n", errno);
+        close(sock);
         return 1;
     }
 
