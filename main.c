@@ -5,7 +5,6 @@
 #include <sys/socket.h>
 #include <net/if.h>
 
-#include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -28,7 +27,7 @@ int main(int argc, const char* argv[]) {
     int sock = socket(AF_PACKET, SOCK_DGRAM, htons(ETH_P_ALL));
 
     if (sock == -1) {
-        fprintf(stderr, "socket failed: %d\n", errno);
+        perror("socket");
         return 1;
     }
 
@@ -37,7 +36,7 @@ int main(int argc, const char* argv[]) {
         ssize_t bytes_read = read(sock, packet_buf, sizeof packet_buf);
 
         if (bytes_read == -1) {
-            fprintf(stderr, "recvfrom failed: %d\n", errno);
+            perror("read");
             continue;
         }
 
