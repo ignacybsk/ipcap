@@ -49,7 +49,7 @@ uint32_t ipv4_string_to_address(const char string[]) {
 
     sscanf(string, "%3d.%3d.%3d.%3d", &byte1, &byte2, &byte3, &byte4);
 
-    return ((byte1 << 8 | byte2) << 8 | byte3) << 8 | byte4;
+    return (byte1 << 24) | (byte2 << 16) | (byte3 << 8) | byte1;
 }
 
 void ipv4_address_to_string(uint32_t address, char string[]) {
