@@ -44,6 +44,14 @@ int ipv4_is_packet_ipv4(uint8_t packet_msb) {
     return (packet_msb >> 4) == 4;
 }
 
+uint32_t ipv4_string_to_address(const char string[]) {
+    int byte1, byte2, byte3, byte4;
+
+    sscanf(string, "%3d.%3d.%3d.%3d", &byte1, &byte2, &byte3, &byte4);
+
+    return ((byte1 << 8 | byte2) << 8 | byte3) << 8 | byte4;
+}
+
 void ipv4_address_to_string(uint32_t address, char string[]) {
     uint8_t byte1 = address >> 24;
     uint8_t byte2 = address >> 16;

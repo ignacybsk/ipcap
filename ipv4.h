@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#define IPV4_PACKET_BUFFER_LENGTH 19
+#define IPV4_PACKET_BUFFER_SIZE 20
 #define IPV4_HEADER_SIZE 20
 
 #define IPV4_VERSION_IDX 0
@@ -69,6 +69,8 @@ uint32_t ipv4_address_from(const uint8_t buf[], int offset, int length);
 int ipv4_data_size_from(struct ipv4_headers* headers);
 
 int ipv4_is_packet_ipv4(uint8_t packet_msb);
+
+uint32_t ipv4_string_to_address(const char string[]);
 
 void ipv4_address_to_string(uint32_t address, char string[]);
 
