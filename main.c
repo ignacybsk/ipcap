@@ -2,6 +2,7 @@
 #include <arpa/inet.h>
 #include <linux/if_packet.h>
 #include <net/ethernet.h>
+#include <stdint.h>
 #include <sys/socket.h>
 #include <net/if.h>
 
@@ -15,14 +16,15 @@ int main(int argc, char* const argv[]) {
     int opt;
 
     char* opt_proto = NULL;
-    char* opt_src = NULL;
-    char* opt_dst = NULL;
+
+    uint32_t opt_src;
+    uint32_t opt_dst;
 
     while ((opt = getopt(argc, argv, "p:s:d:")) != -1) {
         if (optarg) {
             opt == 'p' ? (opt_proto = optarg) : 0;
-            opt == 's' ? (opt_src = optarg) : 0;
-            opt == 'd' ? (opt_dst = optarg) : 0;
+            opt == 's' ? (opt_src = ipv4_string_to_address(optarg)) : 0;
+            opt == 'd' ? (opt_dst = ipv4_string_to_address(optarg)) : 0;
         }
     }
 
@@ -69,12 +71,12 @@ int main(int argc, char* const argv[]) {
             continue;
 
         if (opt_src) {
-            if (ipv4_string_to_address(opt_src) != headers.source_address)
+            if (opt_src != headers.source_address)
                 continue;
         }
 
         if (opt_dst) {
-            if (ipv4_string_to_address(opt_dst) != headers.destination_address)
+            if (opt_dst != headers.destination_address)
                 continue;
         }
 
