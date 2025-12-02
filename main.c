@@ -13,12 +13,12 @@
 #include "ipv4.h"
 
 int main(int argc, char* const argv[]) {
-    int opt;
+    int opt = 0;
 
     char* opt_proto = NULL;
 
-    uint32_t opt_src;
-    uint32_t opt_dst;
+    uint32_t opt_src = 0;
+    uint32_t opt_dst = 0;
 
     while ((opt = getopt(argc, argv, "p:s:d:")) != -1) {
         if (optarg) {
@@ -28,7 +28,7 @@ int main(int argc, char* const argv[]) {
         }
     }
 
-    int opt_proto_num;
+    int opt_proto_num = 0;
 
     if (opt_proto) {
         struct protoent* ent = getprotobyname(opt_proto);
