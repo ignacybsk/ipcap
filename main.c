@@ -1,16 +1,18 @@
-#include <netdb.h>
 #include <arpa/inet.h>
 #include <linux/if_packet.h>
 #include <net/ethernet.h>
+#include <net/if.h>
+#include <netdb.h>
 #include <stdint.h>
 #include <sys/socket.h>
-#include <net/if.h>
 
 #include <getopt.h>
 #include <stdio.h>
 #include <unistd.h>
 
 #include "ipv4.h"
+
+#define HELP_MESSAGE "usage: ipcap [options...]\n-p\tfilter by protocol\n-s\tfilter by source address\n-d\tfilter by destination address\n-h\tprint this message\n"
 
 int main(int argc, char* const argv[]) {
     int opt = 0;
@@ -20,11 +22,20 @@ int main(int argc, char* const argv[]) {
     uint32_t opt_src = 0;
     uint32_t opt_dst = 0;
 
-    while ((opt = getopt(argc, argv, "p:s:d:")) != -1) {
-        if (optarg) {
-            opt == 'p' ? (opt_proto = optarg) : 0;
-            opt == 's' ? (opt_src = ipv4_string_to_address(optarg)) : 0;
-            opt == 'd' ? (opt_dst = ipv4_string_to_address(optarg)) : 0;
+    while ((opt = getopt(argc, argv, "p:s:d:h")) != -1) {
+        switch (opt) {
+        case 'p':
+            opt_proto = optarg;
+            break;
+        case 's':
+            opt_src = ipv4_string_to_address(optarg);
+            break;
+        case 'd':
+            opt_dst = ipv4_string_to_address(optarg);
+            break;
+        case 'h':
+            printf(HELP_MESSAGE);
+            return 0;
         }
     }
 
