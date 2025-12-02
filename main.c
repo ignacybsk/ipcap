@@ -12,9 +12,15 @@
 
 #include "ipv4.h"
 
-#define HELP_MESSAGE "usage: ipcap [options...]\n-p\tfilter by protocol\n-s\tfilter by source address\n-d\tfilter by destination address\n-i\tbind to a specific network interface\n-h\tprint this message\n"
-
 int main(int argc, char* const argv[]) {
+    const char help_text[] =
+        "usage: ipcap [options...]\n"
+        "-p filter by protocol\n"
+        "-s filter by source address\n"
+        "-d filter by destination address\n"
+        "-i bind to a specific network interface\n"
+        "-h print this message\n";
+
     int opt = 0;
 
     char* opt_proto = NULL;
@@ -38,7 +44,7 @@ int main(int argc, char* const argv[]) {
             opt_if_name = optarg;
             break;
         case 'h':
-            printf(HELP_MESSAGE);
+            printf(help_text);
             return 0;
         }
     }
