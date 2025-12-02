@@ -12,17 +12,18 @@
 
 #include "ipv4.h"
 
-#define HELP_MESSAGE "usage: ipcap [options...]\n-p\tfilter by protocol\n-s\tfilter by source address\n-d\tfilter by destination address\n-h\tprint this message\n"
+#define HELP_MESSAGE "usage: ipcap [options...]\n-p\tfilter by protocol\n-s\tfilter by source address\n-d\tfilter by destination address\n-i\tbind to a specific network interface\n-h\tprint this message\n"
 
 int main(int argc, char* const argv[]) {
     int opt = 0;
 
     char* opt_proto = NULL;
+    char* opt_if_name = NULL;
 
     uint32_t opt_src = 0;
     uint32_t opt_dst = 0;
 
-    while ((opt = getopt(argc, argv, "p:s:d:h")) != -1) {
+    while ((opt = getopt(argc, argv, "i:p:s:d:h")) != -1) {
         switch (opt) {
         case 'p':
             opt_proto = optarg;
@@ -32,6 +33,9 @@ int main(int argc, char* const argv[]) {
             break;
         case 'd':
             opt_dst = ipv4_string_to_address(optarg);
+            break;
+        case 'i':
+            opt_if_name = optarg;
             break;
         case 'h':
             printf(HELP_MESSAGE);
@@ -59,6 +63,30 @@ int main(int argc, char* const argv[]) {
         return 1;
     }
 
+    if (opt_if_name) {
+        unsigned int if_index = if_nametoindex(opt_if_name);
+
+        if (!if_index) {
+            perror("if_nametoindex");
+            close(sock);
+            return 1;
+        }
+
+        struct sockaddr_ll ll = {
+            .sll_ifindex = if_index,
+            .sll_protocol = htons(ETH_P_ALL),
+            .sll_family = AF_PACKET,
+        };
+
+        if (bind(sock, (struct sockaddr*)&ll, sizeof ll) == -1) {
+            perror("bind");
+            close(sock);
+            return 1;
+        }
+    }
+
+    printf("listening %s %s\n", opt_if_name, opt_proto);
+
     while (1) {
         uint8_t packet_buf[IPV4_PACKET_BUFFER_SIZE];
         ssize_t bytes_read = read(sock, packet_buf, IPV4_PACKET_BUFFER_SIZE);
@@ -81,15 +109,13 @@ int main(int argc, char* const argv[]) {
         if (opt_proto_num && headers.protocol != opt_proto_num)
             continue;
 
-        if (opt_src) {
+        if (opt_src)
             if (opt_src != headers.source_address)
                 continue;
-        }
-
-        if (opt_dst) {
+        
+        if (opt_dst)
             if (opt_dst != headers.destination_address)
                 continue;
-        }
 
         ipv4_headers_print_to(stdout, &headers);
     }
