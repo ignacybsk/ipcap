@@ -46,6 +46,8 @@ int main(int argc, char* const argv[]) {
         case 'h':
             printf(help_text);
             return 0;
+        default:
+            return 1;
         }
     }
 
