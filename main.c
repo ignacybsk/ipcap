@@ -15,10 +15,10 @@
 int main(int argc, char* const argv[]) {
     const char help_text[] =
         "usage: ipcap [options...]\n"
-        "-p filter by protocol\n"
-        "-s filter by source address\n"
-        "-d filter by destination address\n"
-        "-i bind to a specific network interface\n"
+        "-p <proto> filter by protocol\n"
+        "-s <addr> filter by source address\n"
+        "-d <addr> filter by destination address\n"
+        "-i <name> bind to a specific network interface\n"
         "-h print this message\n";
 
     int opt = 0;
@@ -57,7 +57,7 @@ int main(int argc, char* const argv[]) {
         struct protoent* ent = getprotobyname(opt_proto);
 
         if (!ent) {
-            fprintf(stderr, "unrecognized protocol '%s'\n", argv[1]);
+            fprintf(stderr, "unrecognized protocol '%s'\n", opt_proto);
             return 1;
         }
 
@@ -117,13 +117,11 @@ int main(int argc, char* const argv[]) {
         if (opt_proto_num && headers.protocol != opt_proto_num)
             continue;
 
-        if (opt_src)
-            if (opt_src != headers.source_address)
-                continue;
-        
-        if (opt_dst)
-            if (opt_dst != headers.destination_address)
-                continue;
+        if (opt_src && opt_src != headers.source_address)
+            continue;
+
+        if (opt_dst && opt_dst != headers.destination_address)
+            continue;
 
         ipv4_headers_print_to(stdout, &headers);
     }
